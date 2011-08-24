@@ -57,6 +57,9 @@
 
 #define MAX_I2C_DATA_LEN	10
 
+/* Enable single touch event mode */
+#define FORCE_SINGLE_POINTER_SUPPORT 1
+
 struct egalax_pointer {
 	bool valid;
 	bool status;
