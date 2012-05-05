@@ -665,7 +665,7 @@ static int __init duart_console_setup(struct console *co, char *options)
 }
 
 static struct console duart_console = {
-	.name = "ttyAM",
+	.name = "ttyAMA",
 	.write = duart_console_write,
 	.device = uart_console_device,
 	.setup = duart_console_setup,
@@ -688,8 +688,8 @@ console_initcall(duart_console_init);
 
 static struct uart_driver duart_drv = {
 	.owner = THIS_MODULE,
-	.driver_name = "ttyAM",
-	.dev_name = "ttyAM",
+	.driver_name = "ttyAMA",
+	.dev_name = "ttyAMA",
 	.major = SERIAL_DUART_MAJOR,
 	.minor = SERIAL_DUART_MINOR,
 	.nr = 1,
