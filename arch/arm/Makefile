@@ -93,6 +93,11 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
 CFLAGS_ABI	+=-funwind-tables
 endif
 
+ifeq ($(CONFIG_ALIGNMENT_TRAP),y)
+CFLAGS_ABI    +=$(call cc-option,-mno-unaligned-access,)
+endif
+KBUILD_CFLAGS += $(call cc-option,-fno-conserve-stack,)
+
 ifeq ($(CONFIG_THUMB2_KERNEL),y)
 AFLAGS_AUTOIT	:=$(call as-option,-Wa$(comma)-mimplicit-it=always,-Wa$(comma)-mauto-it)
 AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
