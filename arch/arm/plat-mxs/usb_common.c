@@ -54,7 +54,8 @@ static void fsl_safe_writel(u32 val32, volatile u32 *addr)
 	__asm__ ("swp %0, %0, [%1]" : : "r"(val32), "r"(addr));
 }
 #else
-static void fsl_safe_writel(u32 val32, volatile u32 *addr) { }
+//static void fsl_safe_writel(u32 val32, volatile u32 *addr) { }
+#define fsl_safe_writel __raw_writel
 #endif
 
 void fsl_usb_xcvr_register(struct fsl_xcvr_ops *xcvr_ops)
