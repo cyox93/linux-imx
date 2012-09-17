@@ -6,6 +6,10 @@ config MACH_MX23EVK
 	depends on ARCH_MX23
 	select USB_ARCH_HAS_EHCI
 
+config MACH_AUSTIN_MX23
+	bool "OHSUNG Austin MX23 Board"
+	depends on ARCH_MX23
+
 endchoice
 
 
