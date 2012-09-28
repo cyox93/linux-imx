@@ -175,7 +175,11 @@ static inline void setup_dotclk_panel(u16 v_pulse_width,
 
 	__raw_writel(BM_LCDIF_CTRL1_BYTE_PACKING_FORMAT,
 		     REGS_LCDIF_BASE + HW_LCDIF_CTRL1_CLR);
+#if defined(CONFIG_FB_MXS_LCD_LB02001)
+	__raw_writel(BF_LCDIF_CTRL1_BYTE_PACKING_FORMAT(0xf) |
+#else
 	__raw_writel(BF_LCDIF_CTRL1_BYTE_PACKING_FORMAT(7) |
+#endif
 		     BM_LCDIF_CTRL1_RECOVER_ON_UNDERFLOW,
 		     REGS_LCDIF_BASE + HW_LCDIF_CTRL1_SET);
 
@@ -201,17 +205,27 @@ static inline void setup_dotclk_panel(u16 v_pulse_width,
 		     BM_LCDIF_CTRL_INPUT_DATA_SWIZZLE |
 		     BM_LCDIF_CTRL_LCD_DATABUS_WIDTH,
 		     REGS_LCDIF_BASE + HW_LCDIF_CTRL_CLR);
+#if defined(CONFIG_FB_MXS_LCD_LB02001)
+	__raw_writel(BF_LCDIF_CTRL_WORD_LENGTH(0) |/* 16 bit */
+		     BM_LCDIF_CTRL_DATA_SELECT |/* data mode */
+		     BF_LCDIF_CTRL_INPUT_DATA_SWIZZLE(0) |/* no swap */
+		     BF_LCDIF_CTRL_LCD_DATABUS_WIDTH(0),/* 16 bit */
+		     REGS_LCDIF_BASE + HW_LCDIF_CTRL_SET);
+#else
 	__raw_writel(BF_LCDIF_CTRL_WORD_LENGTH(3) |/* 24 bit */
 		     BM_LCDIF_CTRL_DATA_SELECT |/* data mode */
 		     BF_LCDIF_CTRL_INPUT_DATA_SWIZZLE(0) |/* no swap */
 		     BF_LCDIF_CTRL_LCD_DATABUS_WIDTH(3),/* 24 bit */
 		     REGS_LCDIF_BASE + HW_LCDIF_CTRL_SET);
+#endif
 
 	val = __raw_readl(REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0);
 	val &= ~(BM_LCDIF_VDCTRL0_VSYNC_POL |
 		 BM_LCDIF_VDCTRL0_HSYNC_POL |
 		 BM_LCDIF_VDCTRL0_ENABLE_POL | BM_LCDIF_VDCTRL0_DOTCLK_POL);
+#ifndef CONFIG_FB_MXS_LCD_LB02001
 	val |= BM_LCDIF_VDCTRL0_ENABLE_POL | BM_LCDIF_VDCTRL0_DOTCLK_POL;
+#endif
 	__raw_writel(val, REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0);
 
 	val = __raw_readl(REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0);
