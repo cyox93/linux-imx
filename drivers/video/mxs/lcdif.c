@@ -53,9 +53,15 @@ void mxs_init_lcdif(void)
 	__raw_writel(BM_LCDIF_CTRL1_RESET,
 		     REGS_LCDIF_BASE + HW_LCDIF_CTRL1_SET);
 
+#ifndef CONFIG_FB_MXS_LCD_LB02001
 	/* VSYNC is an input by default */
 	__raw_writel(BM_LCDIF_VDCTRL0_VSYNC_OEB,
 		     REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0_SET);
+#else
+	/* VSYNC is an input by default */
+	__raw_writel(BM_LCDIF_VDCTRL0_VSYNC_OEB,
+		     REGS_LCDIF_BASE + HW_LCDIF_VDCTRL0_CLR);
+#endif
 
 	/* Reset display */
 	__raw_writel(BM_LCDIF_CTRL1_RESET,

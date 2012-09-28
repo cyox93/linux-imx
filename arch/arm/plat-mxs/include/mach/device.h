@@ -190,6 +190,14 @@ struct mxs_mmc_platform_data {
 };
 /* end of mxs ssp sd/mmc data definitions */
 
+/* mxs lcd spi gpio data definitions */
+struct mxs_lcd_spi_platform_data {
+	int sck;
+	int mosi;
+	int miso;
+	int cs;
+};
+
 #ifdef CONFIG_MXS_ICOLL
 extern void __init avic_init_irq(void __iomem *base, int nr_irqs);
 #endif

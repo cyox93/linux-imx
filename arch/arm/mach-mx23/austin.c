@@ -23,6 +23,7 @@
 #include <linux/platform_device.h>
 #include <linux/i2c.h>
 #include <linux/spi/spi.h>
+#include <linux/gpio.h>
 
 #include <asm/setup.h>
 #include <asm/mach-types.h>
@@ -59,6 +60,53 @@ static void __init mx23evk_init_adc(void)
 }
 #endif
 
+#if defined(CONFIG_FB_MXS_LCD_LB02001)
+struct mxs_lcd_spi_platform_data lcd_spi = {
+	.sck = MXS_PIN_TO_GPIO(PINID_LCD_RS),
+	.mosi = MXS_PIN_TO_GPIO(PINID_LCD_WR),
+	.miso = -1,
+	.cs = MXS_PIN_TO_GPIO(PINID_LCD_CS),
+};
+
+static void __init austin_init_lcd_spi(void)
+{
+	struct platform_device *pdev;
+
+	pdev = mxs_get_device("mxs-lcd-spi", 0);
+	if (pdev == NULL)
+		return;
+
+	printk("%s : pdev[%p]\n", __func__, pdev);
+
+	if (lcd_spi.sck >= 0) {
+		gpio_request(lcd_spi.sck, "LCD SPI SCK");
+		gpio_direction_output(lcd_spi.sck, 1);
+	}
+
+	if (lcd_spi.mosi >= 0) {
+		gpio_request(lcd_spi.mosi, "LCD SPI MOSI");
+		gpio_direction_output(lcd_spi.mosi, 1);
+	}
+
+	if (lcd_spi.miso >= 0) {
+		gpio_request(lcd_spi.miso, "LCD SPI MISO");
+		gpio_direction_output(lcd_spi.miso, 1);
+	}
+
+	if (lcd_spi.cs >= 0) {
+		gpio_request(lcd_spi.cs, "LCD SPI CS");
+		gpio_direction_output(lcd_spi.cs, 1);
+	}
+
+	pdev->dev.platform_data = &lcd_spi;
+	mxs_add_device(pdev, 2);
+}
+#else
+static void __init austin_init_lcd_spi(void)
+{
+}
+#endif
+
 #define REGS_OCOTP_BASE	IO_ADDRESS(OCOTP_PHYS_ADDR)
 int get_evk_board_version()
 {
@@ -74,6 +122,7 @@ EXPORT_SYMBOL_GPL(get_evk_board_version);
 static void __init mx23evk_device_init(void)
 {
 	mx23evk_init_adc();
+	austin_init_lcd_spi();
 }
 
 

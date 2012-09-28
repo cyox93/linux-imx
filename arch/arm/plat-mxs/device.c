@@ -505,6 +505,16 @@ static struct platform_device otp_device = {
 };
 #endif
 
+#if defined(CONFIG_FB_MXS_LCD_LB02001)
+static struct platform_device mxs_lcd_spi = {
+	.name			= "mxs-lcd-spi",
+	.id			= 0,
+	.dev = {
+		.release = mxs_nop_release,
+		},
+};
+#endif
+
 static inline void mxs_init_busfreq(void)
 {
 	(void)platform_device_register(&busfreq_device);
@@ -740,6 +750,14 @@ static struct mxs_dev_lookup dev_lookup[] = {
 	.name = "mxs-adc",
 	.size = 1,
 	.pdev = &mxs_adc,
+	},
+#endif
+
+#if defined(CONFIG_FB_MXS_LCD_LB02001)
+	{
+	.name = "mxs-lcd-spi",
+	.size = 1,
+	.pdev = &mxs_lcd_spi,
 	},
 #endif
 

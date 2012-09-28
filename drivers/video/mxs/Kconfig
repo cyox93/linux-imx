@@ -21,6 +21,12 @@ config FB_MXS_LCD_LMS430
 	---help---
 	  Use LMS430 dotclock LCD panel for MXS
 
+config FB_MXS_LCD_LB02001
+	depends on FB_MXS
+	bool "LB02001"
+	---help---
+	  Use LB02001 SunBond 2.0' TFT LCD Module
+
 config FB_MXS_TVENC
 	depends on ARCH_MXS
 	bool "TVENC"
