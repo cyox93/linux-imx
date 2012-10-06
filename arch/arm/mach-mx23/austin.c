@@ -24,6 +24,7 @@
 #include <linux/i2c.h>
 #include <linux/spi/spi.h>
 #include <linux/gpio.h>
+#include <linux/input.h>
 
 #include <asm/setup.h>
 #include <asm/mach-types.h>
@@ -107,6 +108,115 @@ static void __init austin_init_lcd_spi(void)
 }
 #endif
 
+#if defined(CONFIG_KEYBOARD_MXS_GPIO) || defined(CONFIG_KEYBOARD_MXS_GPIO_MODULE)
+static unsigned int row_gpios[] = {
+	MXS_PIN_TO_GPIO(PINID_GPMI_D15),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D14),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D13),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D12),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D11),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D10),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D09),
+	MXS_PIN_TO_GPIO(PINID_GPMI_D08),
+};
+
+static unsigned int col_gpios[] = {
+	MXS_PIN_TO_GPIO(PINID_GPMI_RDY1),
+	MXS_PIN_TO_GPIO(PINID_GPMI_RDY2),
+	MXS_PIN_TO_GPIO(PINID_GPMI_RDY3),
+	MXS_PIN_TO_GPIO(PINID_ROTARYA),
+	MXS_PIN_TO_GPIO(PINID_ROTARYB),
+	MXS_PIN_TO_GPIO(PINID_LCD_D16),
+	MXS_PIN_TO_GPIO(PINID_LCD_D17),
+};
+
+static int austin_keymap[] = {
+	KEY(0, 0, KEY_F4),			/* F4 (left) */
+	KEY(0, 1, KEY_F3),			/* F3 (left) */
+	KEY(0, 2, KEY_F2),			/* F2 (left) */
+	KEY(0, 3, KEY_F1),			/* F1 (left) */
+	KEY(0, 4, KEY_F8),			/* F8 (right) */
+	KEY(0, 5, KEY_F7),			/* F7 (right) */
+	KEY(0, 6, KEY_F6),			/* F6 (right) */
+	KEY(0, 7, KEY_F5),			/* F5 (right) */
+
+	KEY(1, 0, KEY_CHANNELDOWN),		/* ch- */
+	KEY(1, 1, KEY_CHANNELUP),		/* ch+ */
+	KEY(1, 2, KEY_MUTE),			/* mute */
+	KEY(1, 3, KEY_VOLUMEDOWN),		/* vol- */
+	KEY(1, 4, KEY_VOLUMEUP),		/* vol+ */
+	KEY(1, 5, KEY_DELETE),			/* soft key (right) */
+	KEY(1, 6, KEY_HOME),			/* main (home) */
+	KEY(1, 7, KEY_INSERT),			/* soft key (left) */
+
+	KEY(2, 0, KEY_UP),			/* up (navi) */
+	KEY(2, 1, KEY_RIGHT),			/* right (navi) */
+	KEY(2, 2, KEY_PLAY),			/* play */
+	KEY(2, 3, KEY_EXIT),			/* exit */
+	KEY(2, 4, KEY_INFO),			/* info */
+	KEY(2, 5, KEY_EPG),			/* guide */
+	KEY(2, 6, KEY_MENU),			/* menu */
+	KEY(2, 7, KEY_PREVIOUS),		/* previous */
+
+	KEY(3, 0, KEY_2),			/* 2 */
+	KEY(3, 1, KEY_1),			/* 1 */
+	KEY(3, 2, KEY_BLUE),			/* blue */
+	KEY(3, 3, KEY_YELLOW),			/* yellow */
+	KEY(3, 4, KEY_GREEN),			/* green */
+	KEY(3, 5, KEY_RED),			/* red */
+	KEY(3, 6, KEY_RECORD),			/* record */
+	KEY(3, 7, KEY_STOP),			/* stop */
+
+	KEY(4, 0, KEY_FORWARD),			/* forward */
+	KEY(4, 1, KEY_PAUSE),			/* pause */
+	KEY(4, 2, KEY_REWIND),			/* rewind */
+	KEY(4, 3, KEY_PAGEUP),			/* skip+ */
+	KEY(4, 4, KEY_PLAY),			/* play */
+	KEY(4, 5, KEY_PAGEDOWN),		/* skip- */
+	KEY(4, 6, KEY_SELECT),			/* select */
+	KEY(4, 7, KEY_DOWN),			/* down (navi) */
+
+	KEY(5, 0, KEY_MINUS),			/* minus */
+	KEY(5, 1, KEY_9),			/* 9 */
+	KEY(5, 2, KEY_8),			/* 8 */
+	KEY(5, 3, KEY_7),			/* 7 */
+	KEY(5, 4, KEY_6),			/* 6 */
+	KEY(5, 5, KEY_5),			/* 5 */
+	KEY(5, 6, KEY_4),			/* 4 */
+	KEY(5, 7, KEY_3),			/* 3 */
+
+	KEY(6, 6, KEY_ENTER),			/* enter */
+	KEY(6, 7, KEY_0),			/* 0 */
+
+	0
+};
+
+static struct mxs_kbd_gpio_plat_data mxs_kbd_gpio_data = {
+	.rows		= ARRAY_SIZE(row_gpios),
+	.cols		= ARRAY_SIZE(col_gpios),
+	.keymap 	= austin_keymap,
+	.keymapsize 	= ARRAY_SIZE(austin_keymap),
+	.rep		= 1,
+	.row_gpios 	= row_gpios,
+	.col_gpios 	= col_gpios,
+};
+
+static void __init austin_init_keypad(void)
+{
+	struct platform_device *pdev;
+	pdev = mxs_get_device("mxs-kbd-gpio", 0);
+	if (pdev == NULL || IS_ERR(pdev))
+		return;
+
+	pdev->dev.platform_data = &mxs_kbd_gpio_data;
+	mxs_add_device(pdev, 3);
+}
+#else
+static void __init austin_init_keypad(void)
+{
+}
+#endif
+
 #define REGS_OCOTP_BASE	IO_ADDRESS(OCOTP_PHYS_ADDR)
 int get_evk_board_version()
 {
@@ -123,6 +233,7 @@ static void __init mx23evk_device_init(void)
 {
 	mx23evk_init_adc();
 	austin_init_lcd_spi();
+	austin_init_keypad();
 }
 
 

@@ -298,6 +298,16 @@ static struct platform_device mxs_kbd = {
 };
 #endif
 
+#if defined(CONFIG_KEYBOARD_MXS_GPIO) || defined(CONFIG_KEYBOARD_MXS_GPIO_MODULE)
+static struct platform_device mxs_kbd_gpio = {
+	.name = "mxs-kbd-gpio",
+	.id = 0,
+	.dev = {
+		.release = mxs_nop_release,
+	       },
+};
+#endif
+
 #if defined(CONFIG_TOUCHSCREEN_MXS) || defined(CONFIG_TOUCHSCREEN_MXS_MODULE)
 static struct platform_device mxs_ts = {
 	.name = "mxs-ts",
@@ -675,6 +685,14 @@ static struct mxs_dev_lookup dev_lookup[] = {
 	 .size = 1,
 	 .pdev = &mxs_kbd,
 	 },
+#endif
+
+#if defined(CONFIG_KEYBOARD_MXS_GPIO) || defined(CONFIG_KEYBOARD_MXS_GPIO_MODULE)
+	{
+	 .name = "mxs-kbd-gpio",
+	 .size = 1,
+	 .pdev = &mxs_kbd_gpio,
+	},
 #endif
 
 #if defined(CONFIG_TOUCHSCREEN_MXS) || defined(CONFIG_TOUCHSCREEN_MXS_MODULE)

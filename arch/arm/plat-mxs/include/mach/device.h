@@ -82,6 +82,24 @@ struct mxs_kbd_plat_data {
 	unsigned int btn_irq_ctrl; /* detect irq enable bits */
 };
 
+#define KEY_PERSISTENT		0x00800000
+#define KEYNUM_MASK		0x00EFFFFF
+#define KEY(col, row, val) (((col) << 28) | ((row) << 24) | (val))
+#define PERSISTENT_KEY(col, row) (((col) << 28) | ((row) << 24) | \
+						KEY_PERSISTENT)
+struct mxs_kbd_gpio_plat_data {
+	int rows;
+	int cols;
+	int *keymap;
+	unsigned int keymapsize;
+	unsigned int rep:1;
+	unsigned long delay;
+	unsigned int dbounce:1;
+
+	unsigned int *row_gpios;
+	unsigned int *col_gpios;
+};
+
 struct mxs_touchscreen_plat_data {
 	u8 x_plus_chan;
 	u8 x_minus_chan;

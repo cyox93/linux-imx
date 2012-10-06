@@ -439,6 +439,12 @@ config KEYBOARD_MXS
 	help
 	  This is the Keypad driver for the Freescale mxs soc
 
+config KEYBOARD_MXS_GPIO
+	tristate "MXS keyboard via gpio"
+	depends on ARCH_MXS
+	help
+	  This is the Keypad driver for the gpio matrix
+	  MXS gpio interrupt is not supported both edge trigger simultaneously.
 
 config KEYBOARD_MC9S08DZ60
 	tristate "mc9s08dz60 keyboard"
