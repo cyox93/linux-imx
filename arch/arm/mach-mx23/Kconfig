@@ -10,6 +10,10 @@ config MACH_AUSTIN_MX23
 	bool "OHSUNG Austin MX23 Board"
 	depends on ARCH_MX23
 
+config MACH_MX23KNP
+	bool "MX23 KNP Board"
+	depends on ARCH_MX23
+
 endchoice
 
 
