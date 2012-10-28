@@ -31,6 +31,9 @@ struct gpio_button_data {
 	struct input_dev *input;
 	struct timer_list timer;
 	struct work_struct work;
+#ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
+	int state;
+#endif
 	bool disabled;
 };
 
@@ -321,8 +324,24 @@ static void gpio_keys_report_event(struct gpio_button_data *bdata)
 	unsigned int type = button->type ?: EV_KEY;
 	int state = (gpio_get_value(button->gpio) ? 1 : 0) ^ button->active_low;
 
+#ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
+	if (bdata->state != state) {
+		bdata->state = state;
+
+		input_event(input, type, button->code, !!state);
+		input_sync(input);
+	}
+
+	if (state) {
+                int delay = HZ / 20;
+		mod_timer(&bdata->timer, jiffies + delay);
+	} else {
+		enable_irq(gpio_to_irq(button->gpio));
+	}
+#else
 	input_event(input, type, button->code, !!state);
 	input_sync(input);
+#endif
 }
 
 static void gpio_keys_work_func(struct work_struct *work)
@@ -347,6 +366,9 @@ static irqreturn_t gpio_keys_isr(int irq, void *dev_id)
 
 	BUG_ON(irq != gpio_to_irq(button->gpio));
 
+#ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
+	disable_irq_nosync(irq);
+#endif
 	if (button->debounce_interval)
 		mod_timer(&bdata->timer,
 			jiffies + msecs_to_jiffies(button->debounce_interval));
@@ -392,6 +414,13 @@ static int __devinit gpio_keys_setup_key(struct platform_device *pdev,
 	}
 
 	irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
+
+#ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
+	if (button->active_low)
+		irqflags = IRQF_TRIGGER_FALLING;
+	else
+		irqflags = IRQF_TRIGGER_RISING;
+#endif
 	/*
 	 * If platform has specified that the button can be disabled,
 	 * we don't want it to share the interrupt line.

@@ -179,6 +179,13 @@ config KEYBOARD_GPIO
 	  To compile this driver as a module, choose M here: the
 	  module will be called gpio_keys.
 
+config KEYBOARD_GPIO_RELEASE_TIMER
+	bool "release timer for GPIO Buttons"
+	depends on KEYBOARD_GPIO
+	help
+	  add timer for checking button released event
+	  this option is for only one way trigger interrupt (rising or falling).
+
 config KEYBOARD_TCA6416
 	tristate "TCA6416 Keypad Support"
 	depends on I2C
@@ -460,3 +467,4 @@ config KEYBOARD_MPR084
 	  Touch Sensor controller chip.
 
 endif
+
