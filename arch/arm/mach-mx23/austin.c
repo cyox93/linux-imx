@@ -255,7 +255,7 @@ static void __init austin_init_machine(void)
 	mx23evk_device_init();
 }
 
-MACHINE_START(MX23EVK, "OHSUNG AUSTIN MX23 board")
+MACHINE_START(AUSTIN_MX23, "Freescale MX23 austin board")
 	.phys_io	= 0x80000000,
 	.io_pg_offst	= ((0xf0000000) >> 18) & 0xfffc,
 	.boot_params	= 0x40000100,
