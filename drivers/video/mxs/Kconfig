@@ -27,6 +27,13 @@ config FB_MXS_LCD_LB02001
 	---help---
 	  Use LB02001 SunBond 2.0' TFT LCD Module
 
+config FB_MXS_LCD_TM024HBH40
+	depends on FB_MXS
+	bool "TM024HBH40"
+	---help---
+	 Use TM024HBH40 SHANGHAI TIANMA 2.4' 240x320  TTF LCD Module
+	 HX8347G driver ic, 16bit i810 interface
+
 config FB_MXS_TVENC
 	depends on ARCH_MXS
 	bool "TVENC"

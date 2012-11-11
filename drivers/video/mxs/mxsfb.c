@@ -208,6 +208,10 @@ static irqreturn_t lcd_irq_handler(int irq, void *dev_id)
 		__raw_writel(BM_LCDIF_CTRL1_CUR_FRAME_DONE_IRQ,
 			     data->regbase + HW_LCDIF_CTRL1_CLR);
 		data->vsync_count++;
+
+#ifdef CONFIG_FB_MXS_LCD_TM024HBH40
+		mxs_lcdif_run();
+#endif
 	}
 	if (status_lcd & BM_LCDIF_CTRL1_UNDERFLOW_IRQ) {
 		pr_debug("%s: underflow irq\n", __func__);
