@@ -132,7 +132,14 @@ static void gpio_keys_disable_button(struct gpio_button_data *bdata)
 static void gpio_keys_enable_button(struct gpio_button_data *bdata)
 {
 	if (bdata->disabled) {
+#ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
+		if (!bdata->button->is_irq_enabled) {
+			enable_irq(gpio_to_irq(bdata->button->gpio));
+			bdata->button->is_irq_enabled = true;
+		}
+#else
 		enable_irq(gpio_to_irq(bdata->button->gpio));
+#endif
 		bdata->disabled = false;
 	}
 }
@@ -336,7 +343,10 @@ static void gpio_keys_report_event(struct gpio_button_data *bdata)
                 int delay = HZ / 20;
 		mod_timer(&bdata->timer, jiffies + delay);
 	} else {
-		enable_irq(gpio_to_irq(button->gpio));
+		if (!button->is_irq_enabled) {
+			enable_irq(gpio_to_irq(button->gpio));
+			button->is_irq_enabled = true;
+		}
 	}
 #else
 	input_event(input, type, button->code, !!state);
@@ -367,7 +377,10 @@ static irqreturn_t gpio_keys_isr(int irq, void *dev_id)
 	BUG_ON(irq != gpio_to_irq(button->gpio));
 
 #ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
-	disable_irq_nosync(irq);
+	if (button->is_irq_enabled) {
+		disable_irq_nosync(irq);
+		button->is_irq_enabled = false;
+	}
 #endif
 	if (button->debounce_interval)
 		mod_timer(&bdata->timer,
@@ -435,6 +448,10 @@ static int __devinit gpio_keys_setup_key(struct platform_device *pdev,
 		goto fail3;
 	}
 
+#ifdef CONFIG_KEYBOARD_GPIO_RELEASE_TIMER
+	disable_irq(irq);
+	button->is_irq_enabled = false;
+#endif
 	return 0;
 
 fail3:
