@@ -26,6 +26,7 @@
 #include <linux/gpio.h>
 #include <linux/input.h>
 #include <linux/gpio_keys.h>
+#include <linux/delay.h>
 
 #include <asm/setup.h>
 #include <asm/mach-types.h>
@@ -109,8 +110,21 @@ static void __init mx23knp_init_keypad(void)
 {
 	platform_device_register(&mx23knp_device_gpiokeys);
 }
+
+static void __init mx23knp_init_bluetooth(void)
+{
+	gpio_request(MXS_PIN_TO_GPIO(PINID_GPMI_D12), "Bluetooth RESET");
+	gpio_direction_output(MXS_PIN_TO_GPIO(PINID_GPMI_D12), 0);
+	mdelay(100);
+
+	gpio_set_value(MXS_PIN_TO_GPIO(PINID_GPMI_D12), 1);
+}
 #else
 static void __init mx23knp_init_keypad(void)
+{
+}
+
+static void __init mx23knp_init_bluetooth(void)
 {
 }
 #endif
@@ -131,6 +145,7 @@ static void __init mx23evk_device_init(void)
 {
 	mx23evk_init_adc();
 	mx23knp_init_keypad();
+	mx23knp_init_bluetooth();
 }
 
 

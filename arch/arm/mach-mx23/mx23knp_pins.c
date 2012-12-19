@@ -62,13 +62,6 @@ static struct pin_desc mx23evk_fixed_pins[] = {
 	 .fun   = PIN_FUN1,
 	 },
 #endif
-	{
-	 .name = "Bluetooth RESET",
-	 .id = PINID_GPMI_D12,
-	 .fun = PIN_GPIO,
-	 .output = !0,
-	 .data = 0,
-	 },
 
 #ifdef CONFIG_MXS_AUART2_DEVICE_ENABLE
 	{
