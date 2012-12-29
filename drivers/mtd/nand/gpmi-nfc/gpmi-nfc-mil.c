@@ -1628,7 +1628,9 @@ static int mil_scan_bbt(struct mtd_info *mtd)
 	timing.tRLOH_in_ns             = info->tRLOH_in_ns;
 	timing.tRHOH_in_ns             = info->tRHOH_in_ns;
 
+#ifndef CONFIG_MACH_MX23KNP
 	error = nfc->set_timing(this, &timing);
+#endif
 
 	if (error)
 		return error;
