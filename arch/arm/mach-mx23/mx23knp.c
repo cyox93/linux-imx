@@ -27,6 +27,7 @@
 #include <linux/input.h>
 #include <linux/gpio_keys.h>
 #include <linux/delay.h>
+#include <linux/sysdev.h>
 
 #include <asm/setup.h>
 #include <asm/mach-types.h>
@@ -111,6 +112,43 @@ static void __init mx23knp_init_keypad(void)
 	platform_device_register(&mx23knp_device_gpiokeys);
 }
 
+static ssize_t bt_reset_store(struct sys_device *dev,
+					struct sysdev_attribute *attr,
+					const char *buf, size_t size)
+{
+	gpio_set_value(MXS_PIN_TO_GPIO(PINID_GPMI_D12), 0);
+	mdelay(100);
+
+	gpio_set_value(MXS_PIN_TO_GPIO(PINID_GPMI_D12), 1);
+
+	return size;
+}
+
+static SYSDEV_ATTR(reset, 0200, NULL, bt_reset_store);
+
+static struct sysdev_class bt_sysclass = {
+	.name = "bt",
+};
+
+static struct sys_device bt_device = {
+	.id = 0,
+	.cls = &bt_sysclass,
+};
+
+static int bt_sysdev_ctrl_init(void)
+{
+	int err;
+
+	err = sysdev_class_register(&bt_sysclass);
+	if (!err)
+		err = sysdev_register(&bt_device);
+	if (!err) {
+		err = sysdev_create_file(&bt_device, &attr_reset);
+	}
+
+	return err;
+}
+
 static void __init mx23knp_init_bluetooth(void)
 {
 	gpio_request(MXS_PIN_TO_GPIO(PINID_GPMI_D12), "Bluetooth RESET");
@@ -118,6 +156,8 @@ static void __init mx23knp_init_bluetooth(void)
 	mdelay(100);
 
 	gpio_set_value(MXS_PIN_TO_GPIO(PINID_GPMI_D12), 1);
+
+	bt_sysdev_ctrl_init();
 }
 #else
 static void __init mx23knp_init_keypad(void)

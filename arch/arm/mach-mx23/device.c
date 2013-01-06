@@ -533,7 +533,7 @@ static struct gpmi_nfc_platform_data  gpmi_nfc_platform_data = {
 	.platform_exit           = gpmi_nfc_platform_exit,
 	.min_prop_delay_in_ns    = 5,
 	.max_prop_delay_in_ns    = 9,
-#ifdef CONFIG_MACH_MX23KNP
+#ifndef CONFIG_MACH_MX23KNP
 	.max_chip_count          = 1,
 	.boot_area_size_in_bytes = 5 * SZ_1M,
 #else
