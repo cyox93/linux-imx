@@ -282,6 +282,9 @@ static int __devinit mxs_ts_probe(struct platform_device *pdev)
 	input_set_abs_params(idev, ABS_X, 0, 0xFFF, 0, 0);
 	input_set_abs_params(idev, ABS_Y, 0, 0xFFF, 0, 0);
 	input_set_abs_params(idev, ABS_PRESSURE, 0, 1, 0, 0);
+#ifdef CONFIG_MACH_MX23KNP
+	input_set_capability(idev, EV_KEY, BTN_LEFT);
+#endif
 
 	ret = input_register_device(idev);
 	if (ret)
