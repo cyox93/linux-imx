@@ -1690,21 +1690,11 @@ static int mil_boot_areas_init(struct gpmi_nfc_data *this)
 	 * a name field pointing to a known address.
 	 */
 
-#if defined(CONFIG_MACH_AUSTIN_MX23)
-	static char  *_mtd_boot1_name		= "boot";
-	static char  *_mtd_boot2_name		= "boot2";
-	static char  *_mtd_data1_name		= "data1";
-	static char  *_mtd_data2_name		= "data2";
-	static char  *_mtd_rootfs_name		= "rootfs";
-	static char  *general_use_name;
-	general_use_name = _mtd_rootfs_name;
-#else
 	static char  *chip_0_boot_name      = "gpmi-nfc-0-boot";
 	static char  *chip_0_remainder_name = "gpmi-nfc-0-remainder";
 	static char  *chip_1_boot_name      = "gpmi-nfc-1-boot";
 	static char  *medium_remainder_name = "gpmi-nfc-remainder";
 	static char  *general_use_name      = "gpmi-nfc-general-use";
-#endif
 
 	/* Check if we're protecting the boot areas.*/
 
@@ -1797,56 +1787,6 @@ static int mil_boot_areas_init(struct gpmi_nfc_data *this)
 	if (rom->boot_area_count == 1) {
 
 #if defined(CONFIG_MTD_PARTITIONS)
-#if defined(CONFIG_MACH_AUSTIN_MX23)
-		/*
-		 * Austin's partition:
-		 *
-		 * +---------------+-------------+-------------+-----------------+
-		 * | Boot1 & Boot2 |    Data1    |    Data1    |      Rootfs     |
-		 * +---------------+-------------+-------------+-----------------+
-		 */
-
-		int p_cnt = 0, p_offset = 0;
-
-		/* Chip 0 Boot1 */
-		partitions[p_cnt].name       = _mtd_boot1_name;
-		partitions[p_cnt].offset     = 0;
-		partitions[p_cnt].size       = rom->boot_area_size_in_bytes;
-		p_offset += partitions[p_cnt].size;
-		partitions[p_cnt++].mask_flags = 0;
-
-#if 0
-		/* Chip 0 Boot2 */
-		partitions[p_cnt].name       = _mtd_boot2_name;
-		partitions[p_cnt].offset     = p_offset;
-		partitions[p_cnt].size       = rom->boot_area_size_in_bytes;
-		p_offset += partitions[p_cnt].size;
-		partitions[p_cnt++].mask_flags = 0;
-#endif
-		/* Chip 0 Data1 */
-		partitions[p_cnt].name       = _mtd_data1_name;
-		partitions[p_cnt].offset     = p_offset;
-		partitions[p_cnt].size       = 30 * SZ_1M;
-		p_offset += partitions[p_cnt].size;
-		partitions[p_cnt++].mask_flags = 0;
-
-		/* Chip 0 Data2 */
-		partitions[p_cnt].name       = _mtd_data2_name;
-		partitions[p_cnt].offset     = p_offset;
-		partitions[p_cnt].size       = 30 * SZ_1M;
-		p_offset += partitions[p_cnt].size;
-		partitions[p_cnt++].mask_flags = 0;
-
-		/* Chip 0 Rootfs and General use*/
-		partitions[p_cnt].name       = _mtd_rootfs_name;
-		partitions[p_cnt].offset     = p_offset;
-		partitions[p_cnt].size       = MTDPART_SIZ_FULL;
-		p_offset += partitions[p_cnt].size;
-		partitions[p_cnt++].mask_flags = 0;
-
-		add_mtd_partitions(mtd, partitions, p_cnt);
-
-#else	/* !CONFIG_MACH_AUSTIN_MX23 */
 		/*
 		 * We partition the medium like so:
 		 *
@@ -1872,7 +1812,6 @@ static int mil_boot_areas_init(struct gpmi_nfc_data *this)
 		/* Construct and register the partitions. */
 
 		add_mtd_partitions(mtd, partitions, 2);
-#endif	/* CONFIG_MACH_AUSTIN_MX23 */
 
 		/* Find the general use MTD. */
 
