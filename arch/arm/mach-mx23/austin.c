@@ -217,6 +217,45 @@ static void __init austin_init_keypad(void)
 }
 #endif
 
+#if defined(CONFIG_LEDS_MXS) || defined(CONFIG_LEDS_MXS_MODULE)
+static struct mxs_pwm_led  mx23evk_led_pwm[1] = {
+	[0] = {
+		.name = "key-backlight",
+		.pwm = 2,
+		},
+};
+
+struct mxs_pwm_leds_plat_data mx23evk_led_data = {
+	.num = ARRAY_SIZE(mx23evk_led_pwm),
+	.leds = mx23evk_led_pwm,
+};
+
+static struct resource mx23evk_led_res = {
+	.flags = IORESOURCE_MEM,
+	.start = PWM_PHYS_ADDR,
+	.end   = PWM_PHYS_ADDR + 0x3FFF,
+};
+
+static void __init mx23evk_init_leds(void)
+{
+	struct platform_device *pdev;
+
+	pdev = mxs_get_device("mxs-leds", 0);
+	if (pdev == NULL || IS_ERR(pdev))
+		return;
+
+	pdev->resource = &mx23evk_led_res;
+	pdev->num_resources = 1;
+	pdev->dev.platform_data = &mx23evk_led_data;
+	mxs_add_device(pdev, 3);
+}
+#else
+static void __init mx23evk_init_leds(void)
+{
+	;
+}
+#endif
+
 #define REGS_OCOTP_BASE	IO_ADDRESS(OCOTP_PHYS_ADDR)
 int get_evk_board_version()
 {
@@ -234,6 +273,7 @@ static void __init mx23evk_device_init(void)
 	mx23evk_init_adc();
 	austin_init_lcd_spi();
 	austin_init_keypad();
+	mx23evk_init_leds();
 }
 
 
