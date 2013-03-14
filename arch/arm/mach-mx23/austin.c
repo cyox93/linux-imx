@@ -131,52 +131,52 @@ static unsigned int col_gpios[] = {
 };
 
 static int austin_keymap[] = {
-	KEY(0, 0, KEY_F4),			/* F4 (left) */
-	KEY(0, 1, KEY_F3),			/* F3 (left) */
-	KEY(0, 2, KEY_F2),			/* F2 (left) */
-	KEY(0, 3, KEY_F1),			/* F1 (left) */
-	KEY(0, 4, KEY_F8),			/* F8 (right) */
-	KEY(0, 5, KEY_F7),			/* F7 (right) */
-	KEY(0, 6, KEY_F6),			/* F6 (right) */
-	KEY(0, 7, KEY_F5),			/* F5 (right) */
+	KEY(0, 0, KEY_F1),			/* ROOMS (left) */
+	KEY(0, 1, KEY_F2),			/* L1 (left) */
+	KEY(0, 2, KEY_F3),			/* L2 (left) */
+	KEY(0, 3, KEY_F4),			/* L3 (left) */
+	KEY(0, 4, KEY_F9),			/* POWER (right) */
+	KEY(0, 5, KEY_F10),			/* R1 (right) */
+	KEY(0, 6, KEY_F11),			/* R2 (right) */
+	KEY(0, 7, KEY_F12),			/* R3 (right) */
 
-	KEY(1, 0, KEY_CHANNELDOWN),		/* ch- */
-	KEY(1, 1, KEY_CHANNELUP),		/* ch+ */
-	KEY(1, 2, KEY_MUTE),			/* mute */
-	KEY(1, 3, KEY_VOLUMEDOWN),		/* vol- */
-	KEY(1, 4, KEY_VOLUMEUP),		/* vol+ */
-	KEY(1, 5, KEY_DELETE),			/* soft key (right) */
-	KEY(1, 6, KEY_HOME),			/* main (home) */
-	KEY(1, 7, KEY_INSERT),			/* soft key (left) */
+	KEY(1, 0, KEY_PAGEDOWN),	/* ch- */
+	KEY(1, 1, KEY_PAGEUP),		/* ch+ */
+	KEY(1, 2, KEY_END),			/* mute */
+	KEY(1, 3, KEY_DELETE),		/* vol- */
+	KEY(1, 4, KEY_INSERT),		/* vol+ */
+	KEY(1, 5, KEY_F7),			/* page next (right soft key) */
+	KEY(1, 6, KEY_F6),			/* main (home) */
+	KEY(1, 7, KEY_F5),			/* page prev (left soft key) */
 
 	KEY(2, 0, KEY_UP),			/* up (navi) */
-	KEY(2, 1, KEY_RIGHT),			/* right (navi) */
-	KEY(2, 2, KEY_LEFT),			/* left (navi) */
-	KEY(2, 3, KEY_EXIT),			/* exit */
-	KEY(2, 4, KEY_INFO),			/* info */
-	KEY(2, 5, KEY_EPG),			/* guide */
-	KEY(2, 6, KEY_MENU),			/* menu */
-	KEY(2, 7, KEY_PREVIOUS),		/* previous */
+	KEY(2, 1, KEY_RIGHT),		/* right (navi) */
+	KEY(2, 2, KEY_LEFT),		/* left (navi) */
+	KEY(2, 3, KEY_E),			/* exit */
+	KEY(2, 4, KEY_I),			/* info */
+	KEY(2, 5, KEY_G),			/* guide */
+	KEY(2, 6, KEY_M),			/* menu */
+	KEY(2, 7, KEY_HOME),		/* prev channel */
 
 	KEY(3, 0, KEY_2),			/* 2 */
 	KEY(3, 1, KEY_1),			/* 1 */
-	KEY(3, 2, KEY_BLUE),			/* blue */
-	KEY(3, 3, KEY_YELLOW),			/* yellow */
-	KEY(3, 4, KEY_GREEN),			/* green */
-	KEY(3, 5, KEY_RED),			/* red */
-	KEY(3, 6, KEY_RECORD),			/* record */
-	KEY(3, 7, KEY_STOP),			/* stop */
+	KEY(3, 2, KEY_V),			/* blue */
+	KEY(3, 3, KEY_C),			/* yellow */
+	KEY(3, 4, KEY_X),			/* green */
+	KEY(3, 5, KEY_Z),			/* red */
+	KEY(3, 6, KEY_SLASH),		/* record */
+	KEY(3, 7, KEY_COMMA),		/* stop */
 
-	KEY(4, 0, KEY_FORWARD),			/* forward */
-	KEY(4, 1, KEY_PAUSE),			/* pause */
-	KEY(4, 2, KEY_REWIND),			/* rewind */
-	KEY(4, 3, KEY_PAGEUP),			/* skip+ */
-	KEY(4, 4, KEY_PLAY),			/* play */
-	KEY(4, 5, KEY_PAGEDOWN),		/* skip- */
-	KEY(4, 6, KEY_SELECT),			/* select */
-	KEY(4, 7, KEY_DOWN),			/* down (navi) */
+	KEY(4, 0, KEY_APOSTROPHE),	/* forward */
+	KEY(4, 1, KEY_SEMICOLON),	/* pause */
+	KEY(4, 2, KEY_L),			/* rewind */
+	KEY(4, 3, KEY_RIGHTBRACE),	/* skip+ */
+	KEY(4, 4, KEY_LEFTBRACE),	/* play */
+	KEY(4, 5, KEY_P),			/* skip- */
+	KEY(4, 6, KEY_ENTER),		/* select */
+	KEY(4, 7, KEY_DOWN),		/* down (navi) */
 
-	KEY(5, 0, KEY_MINUS),			/* minus */
+	KEY(5, 0, KEY_MINUS),		/* minus */
 	KEY(5, 1, KEY_9),			/* 9 */
 	KEY(5, 2, KEY_8),			/* 8 */
 	KEY(5, 3, KEY_7),			/* 7 */
@@ -185,7 +185,7 @@ static int austin_keymap[] = {
 	KEY(5, 6, KEY_4),			/* 4 */
 	KEY(5, 7, KEY_3),			/* 3 */
 
-	KEY(6, 6, KEY_ENTER),			/* enter */
+	KEY(6, 6, KEY_EQUAL),		/* enter */
 	KEY(6, 7, KEY_0),			/* 0 */
 
 	0
