@@ -739,6 +739,7 @@ int mx23evk_mma7450_pin_release(void)
 
 #if defined(CONFIG_MMC_MXS) || defined(CONFIG_MMC_MXS_MODULE)
 #define MMC0_POWER	MXS_PIN_TO_GPIO(PINID_GPMI_CE1N)
+#define MMC0_RESET	MXS_PIN_TO_GPIO(PINID_AUART1_CTS)
 
 int mxs_mmc_get_wp_mmc0(void)
 {
@@ -758,8 +759,20 @@ int mxs_mmc_hw_init_mmc0(void)
 		goto out_power;
 	}
 	gpio_direction_output(MMC0_POWER, 0);
-	mdelay(100);
 
+	ret = gpio_request(MMC0_RESET, "mmc0_reset");
+	if (ret) {
+		pr_err("reset\n");
+		goto out_power;
+	}
+	gpio_direction_output(MMC0_RESET, 0);
+	mdelay(10);
+
+	gpio_set_value_cansleep(MMC0_POWER, 1);
+	mdelay(50);
+	gpio_set_value_cansleep(MMC0_RESET, 1);
+	mdelay(50);
+ 
 	return 0;
 
 out_power:
@@ -770,6 +783,7 @@ out_power:
 void mxs_mmc_hw_release_mmc0(void)
 {
 	gpio_free(MMC0_POWER);
+	gpio_free(MMC0_RESET);
 
 	mxs_release_pins(mx23evk_mmc_pins, ARRAY_SIZE(mx23evk_mmc_pins));
 }
@@ -778,6 +792,18 @@ void mxs_mmc_cmd_pullup_mmc0(int enable)
 {
 	mxs_set_pullup(PINID_SSP1_CMD, enable, "mmc0_cmd");
 }
+
+void mxs_mmc_hw_reset_mmc0(void)
+{
+	gpio_direction_output(MMC0_POWER, 0);
+	gpio_direction_output(MMC0_RESET, 0);
+	mdelay(100);
+	gpio_direction_output(MMC0_POWER, 1);
+	mdelay(100);
+	gpio_direction_output(MMC0_RESET, 1);
+	mdelay(100);
+}
+EXPORT_SYMBOL(mxs_mmc_hw_reset_mmc0);
 #else
 int mxs_mmc_get_wp_mmc0(void)
 {
@@ -793,6 +819,10 @@ void mxs_mmc_hw_release_mmc0(void)
 }
 
 void mxs_mmc_cmd_pullup_mmc0(int enable)
+{
+}
+
+void mxs_mmc_hw_reset_mmc0(void)
 {
 }
 #endif

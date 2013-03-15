@@ -28,5 +28,6 @@ extern int mxs_mmc_get_wp_mmc0(void);
 extern int mxs_mmc_hw_init_mmc0(void);
 extern void mxs_mmc_hw_release_mmc0(void);
 extern void mxs_mmc_cmd_pullup_mmc0(int enable);
+extern void mxs_mmc_hw_reset_mmc0(void);
 
 #endif /* __ASM_ARM_MACH_MX23EVK_H */
