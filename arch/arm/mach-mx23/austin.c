@@ -131,14 +131,14 @@ static unsigned int col_gpios[] = {
 };
 
 static int austin_keymap[] = {
-	KEY(0, 0, KEY_F1),			/* ROOMS (left) */
-	KEY(0, 1, KEY_F2),			/* L1 (left) */
-	KEY(0, 2, KEY_F3),			/* L2 (left) */
-	KEY(0, 3, KEY_F4),			/* L3 (left) */
-	KEY(0, 4, KEY_F9),			/* POWER (right) */
-	KEY(0, 5, KEY_F10),			/* R1 (right) */
-	KEY(0, 6, KEY_F11),			/* R2 (right) */
-	KEY(0, 7, KEY_F12),			/* R3 (right) */
+	KEY(0, 0, KEY_F4),			/* L3 (left) */
+	KEY(0, 1, KEY_F3),			/* L2 (left) */
+	KEY(0, 2, KEY_F2),			/* L1 (left) */
+	KEY(0, 3, KEY_F1),			/* ROOMS (left) */
+	KEY(0, 4, KEY_F12),			/* R3 (right) */
+	KEY(0, 5, KEY_F11),			/* R2 (right) */
+	KEY(0, 6, KEY_F10),			/* R1 (right) */
+	KEY(0, 7, KEY_F9),			/* POWER (right) */
 
 	KEY(1, 0, KEY_PAGEDOWN),	/* ch- */
 	KEY(1, 1, KEY_PAGEUP),		/* ch+ */
@@ -196,7 +196,7 @@ static struct mxs_kbd_gpio_plat_data mxs_kbd_gpio_data = {
 	.cols		= ARRAY_SIZE(col_gpios),
 	.keymap 	= austin_keymap,
 	.keymapsize 	= ARRAY_SIZE(austin_keymap),
-	.rep		= 1,
+	.rep		= 0,
 	.row_gpios 	= row_gpios,
 	.col_gpios 	= col_gpios,
 };
