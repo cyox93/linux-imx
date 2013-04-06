@@ -100,6 +100,10 @@ const struct linux_logo * __init_refok fb_find_logo(int depth)
 		/* M32R Linux logo */
 		logo = &logo_m32r_clut224;
 #endif
+#ifdef CONFIG_LOGO_TRC_1080_CLUT224
+		/* TRC-1080 Linux logo */
+		logo = &logo_trc_1080_clut224;
+#endif
 	}
 	return logo;
 }

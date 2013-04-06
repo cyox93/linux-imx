@@ -82,4 +82,9 @@ config LOGO_M32R_CLUT224
 	depends on M32R
 	default y
 
+config LOGO_TRC_1080_CLUT224
+	bool "224-color TRC-1080 Linux logo"
+	depends on MACH_AUSTIN_MX23
+	default y
+
 endif # LOGO
