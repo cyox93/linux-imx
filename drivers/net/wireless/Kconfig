@@ -17,6 +17,16 @@ menuconfig WLAN
 
 if WLAN
 
+config WIRELESS_EXT
+	tristate "wireless extention"
+	select WEXT_CORE
+	select WEXT_PROC
+	select WEXT_SPY
+	select WEXT_PRIV
+	default y
+	---help---
+	  Wireless extention config
+
 config PCMCIA_RAYCS
 	tristate "Aviator/Raytheon 2.4GHz wireless support"
 	depends on PCMCIA
