@@ -857,8 +857,10 @@ static int __devinit mxsfb_probe(struct platform_device *pdev)
 
 	pentry->run_panel();
 	/* REVISIT: temporary workaround for MX23EVK */
+#ifndef CONFIG_MACH_AUSTIN_MX23
 	mxsfb_disable_controller(data);
 	mxsfb_enable_controller(data);
+#endif
 	data->cur_phys = data->phys_start;
 	dev_dbg(&pdev->dev, "LCD running now\n");
 
